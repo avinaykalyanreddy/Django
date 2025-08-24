@@ -1,0 +1,15 @@
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <div>
+        <button type="submit">Sign Up</button>
+
+
+    </div>
+
+
+</form>
+
+    <div>
+        <a href="{% url 'users:login' %}"><button>Login</button></a>
+    </div>
