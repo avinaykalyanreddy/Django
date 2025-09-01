@@ -1,0 +1,19 @@
+
+{% extends 'users/email/email_base.html' %}
+
+{% block body %}
+
+
+
+
+  <div class="container">
+    <h2>Hello {{ user.name }},</h2>
+    <p>Thank you for signing up! Please verify your email by clicking the button below:</p>
+    <a href="http://127.0.0.1:8000/users/verifying/?uuid={{ unique_name }}" class="btn">Verify Email</a>
+    <p>If you did not sign up, please ignore this email.</p>
+  </div>
+
+
+
+
+{% endblock %}

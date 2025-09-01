@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ExpenseTracker</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
@@ -22,6 +23,35 @@
                 </div>
 
         </nav>
+
+        {% if messages  %}
+            <div class="fixed top-20 right-4 space-y-2 z-50">
+
+                {% for message in messages %}
+
+                    <div
+
+                            class="px-4 py-2 rounded-lg shadow-md
+
+                                   {% if message.tags == 'success' %} bg-green-500 text-white
+                                    {% elif message.tags == 'error' %} bg-red-500 text-white
+                                    {% elif message.tags == 'warning' %} bg-yellow-500 text-black
+                                    {% endif %}
+                                " >
+
+                        {{ message }}
+
+
+
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
         {% block body %}
 
         {% endblock %}
