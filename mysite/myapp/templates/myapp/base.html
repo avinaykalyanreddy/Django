@@ -37,7 +37,7 @@
                                     {% elif message.tags == 'error' %} bg-red-500 text-white
                                     {% elif message.tags == 'warning' %} bg-yellow-500 text-black
                                     {% endif %}
-                                " >
+                               message " >
 
                         {{ message }}
 
@@ -55,5 +55,18 @@
         {% block body %}
 
         {% endblock %}
+
+        <script>
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        setTimeout(() => {
+                            document.querySelectorAll(".message").forEach(msg => {
+                                msg.style.display = "none";
+                            });
+                        }, 5000);
+                    });
+
+
+        </script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 
-from django.forms import ModelForm, CharField, TextInput, PasswordInput
+from django import forms
 from .models import  Users
-class UserSignUp(ModelForm):
+class UserSignUp(forms.ModelForm):
 
-    confirm_password = CharField(max_length=256, label="Confirm Password",widget= PasswordInput())
-    password = CharField(max_length=256, label="Password",widget= PasswordInput())
+    confirm_password = forms.CharField(max_length=256, label="Confirm Password",widget= forms.PasswordInput())
+    password = forms.CharField(max_length=256, label="Password",widget= forms.PasswordInput())
 
     class Meta:
 
@@ -44,3 +44,8 @@ class UserSignUp(ModelForm):
 
         return cleaned_data
 
+
+class UserLogin(forms.Form):
+
+    email = forms.EmailField()
+    password = forms.CharField(widget= forms.PasswordInput())

@@ -4,10 +4,10 @@ from django.contrib.messages import success,error
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 
-from .forms import  UserSignUp
+from .forms import UserSignUp, UserLogin
 from .models import  Users
 from django.http import HttpResponse
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
 from uuid import uuid4
 
 from django.core.mail import EmailMessage
@@ -44,10 +44,10 @@ def sign_up(reqeust):
 
                 sending_verification_mail(uuid,user_object)
 
-                #m = success(reqeust, f"{user_object.name} your account is created")
 
-                #return redirect("users:login")
-                return HttpResponse("Mail sent Successful")
+                success(reqeust, f"Verification email has been sent successfully to {user_object.email}. Please check your inbox to verify your account.")
+
+                return redirect("users:login")
 
 
         return render(reqeust, "users/sign_up.html", {"form": form})
@@ -58,7 +58,30 @@ def sign_up(reqeust):
 
 def login(request):
 
-    return HttpResponse("Hello user")
+    if request.method == "POST":
+        form = UserLogin(request.POST)
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        user = Users.objects.filter(email=email).first()
+
+        if user :
+
+            if check_password(password,user.password) :
+
+                success(request,"Login successful")
+                return HttpResponse( f"  <h1>Welcome {user.name}</h1>")
+
+            form.add_error("password","Incorrect password")
+
+        else:
+            form.add_error("email","No account found with this email address")
+
+        return render(request, "users/login.html", {"form": form})
+
+    form = UserLogin()
+
+    return render(request,"users/login.html",{"form":form})
 
 
 def sending_verification_mail(uuid,user):
