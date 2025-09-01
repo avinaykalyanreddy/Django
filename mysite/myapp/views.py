@@ -30,35 +30,60 @@ def index(request):
     total_expenses = expenses.aggregate(Sum("amount"))
 
     #logic to calculate 365 days
-    last_year = datetime.date.today() - datetime.timedelta(days=365)
+    def calculate_365():
 
-    year_data = Expense.objects.filter(date__gte=last_year)
-    yearly_sum = year_data.aggregate(Sum("amount"))
+        last_year = datetime.date.today() - datetime.timedelta(days=365)
+
+        year_data = Expense.objects.filter(date__gte=last_year)
+        yearly_sum = year_data.aggregate(Sum("amount"))
+
+        return yearly_sum
+
+    yearly_sum = calculate_365()
 
     #logic to calculate 30 days
 
-    last_month = datetime.date.today() - datetime.timedelta(days=30)
-    month_data = Expense.objects.filter(date__gte=last_month)
+    def calculate_30():
 
-    monthly_sum = month_data.aggregate(Sum("amount"))
+
+        last_month = datetime.date.today() - datetime.timedelta(days=30)
+        month_data = Expense.objects.filter(date__gte=last_month)
+
+        monthly_sum = month_data.aggregate(Sum("amount"))
+
+        return monthly_sum
+
+    monthly_sum = calculate_30()
+
 
     # 7 days
-    last_week = datetime.date.today() - datetime.timedelta(days=7)
-    week_data = Expense.objects.filter(date__gte=last_week)
 
-    week_sum = week_data.aggregate(Sum("amount"))
+    def calculate_7():
+        last_week = datetime.date.today() - datetime.timedelta(days=7)
+        week_data = Expense.objects.filter(date__gte=last_week)
+
+        week_sum = week_data.aggregate(Sum("amount"))
+
+        return week_sum
+    week_sum  = calculate_7()
 
     # today
 
-    today =  datetime.date.today()
+    def today():
+        today =  datetime.date.today()
 
-    today_data = Expense.objects.filter(date__gte=today)
-    today_sum = today_data.aggregate(Sum("amount"))
+        today_data = Expense.objects.filter(date__gte=today)
+        today_sum = today_data.aggregate(Sum("amount"))
 
+        return today_sum
+
+    today_sum = today()
+
+    last_month = datetime.date.today() - datetime.timedelta(days=30)
     daily_sums = Expense.objects.filter(date__gte=last_month).values("date").order_by("-date").annotate(sum=Sum("amount"))
 
     categorical_sums = Expense.objects.filter().values("category").order_by("category").annotate(sum=Sum("amount"))
-    print(categorical_sums)
+
     expense_form = ExpenseForm()
 
 

@@ -357,10 +357,10 @@
             var myChart = new Chart(ctx1, {
             type: 'line',
             data: {
-                labels: dates,
+                labels: dates.reverse(),
                 datasets: [{
                     label: 'Past 30 days expenses',
-                    data: sums,
+                    data: sums.reverse(),
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
