@@ -74,7 +74,7 @@ def login(request):
                 request.session["user_id"] = user.id
 
                 success(request,"Login successful")
-                return HttpResponse( f"  <h1>Welcome {user.name}</h1>")
+                return redirect("myapp:home")
 
             form.add_error("password","Incorrect password")
 
@@ -87,6 +87,11 @@ def login(request):
 
     return render(request,"users/login.html",{"form":form})
 
+def logout(request):
+
+    request.session.flush()
+
+    return redirect("myapp:home")
 
 def sending_verification_mail(uuid,user):
 
@@ -130,3 +135,4 @@ def checking_email_verification(request):
             return HttpResponse("mail Verified")
 
     return HttpResponse("Verification Link is expired")
+

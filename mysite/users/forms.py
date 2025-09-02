@@ -1,6 +1,7 @@
 
 from django import forms
 from .models import  Users
+from django.contrib.messages import error
 class UserSignUp(forms.ModelForm):
 
     confirm_password = forms.CharField(max_length=256, label="Confirm Password",widget= forms.PasswordInput())
@@ -49,3 +50,5 @@ class UserLogin(forms.Form):
 
     email = forms.EmailField()
     password = forms.CharField(widget= forms.PasswordInput())
+
+
