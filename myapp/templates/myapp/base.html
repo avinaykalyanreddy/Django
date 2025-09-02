@@ -1,0 +1,105 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExpenseTracker</title>
+    <link rel="icon" type="image/png" href="{% static 'myapp/images/wallet.png' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body>
+
+     <!--   <nav class="shadow-lg p-5">
+
+                <div class="container flex flex-wrap justify-between items-center mx-auto">
+
+                    <a href="{% url 'myapp:index' %}" class="flex">
+                        <img class="h-10 mr-3" src="{% static 'myapp/images/wallet.png' %}" alt="">
+                        <span class="self-center text-xl font-semibold">Expense Tracker</span>
+                    </a>
+
+                </div>
+
+                <div class="container flex flex-wrap justify-between items-center mx-auto">
+
+                    <h1>{{ user_obj.name }}</h1>
+
+                </div>
+
+        </nav> -->
+<nav class="shadow-lg p-5">
+    <div class="container flex justify-between items-center mx-auto">
+        <!-- Left: Logo + Title -->
+        <a href="{% url 'myapp:index' %}" class="flex items-center">
+            <img class="h-10 mr-3" src="{% static 'myapp/images/wallet.png' %}" alt="">
+            <span class="self-center text-xl font-semibold">Expense Tracker</span>
+        </a>
+
+        {% if user_id == 1 %}
+            <p style="color:Red;">The data below is guest-submitted and can be added by anyone</p>
+        {% endif %}
+
+        <!-- Right: Authentication / User -->
+        <div class="flex items-center space-x-4">
+            {% if user_id == 1 %}
+                <a href="{% url 'users:login' %}" class="text-blue-600 hover:underline">Login</a>
+                <a href="{% url 'users:signup' %}" class="text-blue-600 hover:underline">Sign Up</a>
+            {% else %}
+
+                <a href="{% url 'users:logout' %}" class="text-red-600 hover:underline">Logout</a>
+            {% endif %}
+            <span class="text-gray-800 font-medium">{{ user_obj.name }}</span>
+        </div>
+    </div>
+</nav>
+
+
+
+        {% if messages  %}
+            <div class="fixed top-20 right-4 space-y-2 z-50">
+
+                {% for message in messages %}
+
+                    <div
+
+                            class="px-4 py-2 rounded-lg shadow-md
+
+                                   {% if message.tags == 'success' %} bg-green-500 text-white
+                                    {% elif message.tags == 'error' %} bg-red-500 text-white
+                                    {% elif message.tags == 'warning' %} bg-yellow-500 text-black
+                                    {% endif %}
+                               message " >
+
+                        {{ message }}
+
+
+
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+        {% block body %}
+
+        {% endblock %}
+
+        <script>
+
+                    document.addEventListener("DOMContentLoaded", function () {
+                        setTimeout(() => {
+                            document.querySelectorAll(".message").forEach(msg => {
+                                msg.style.display = "none";
+                            });
+                        }, 5000);
+                    });
+
+
+        </script>
+</body>
+</html>
