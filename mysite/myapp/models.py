@@ -1,8 +1,10 @@
 from django.db import models
-
+from users.models import Users
 # Create your models here.
 
 class Expense(models.Model):
+
+    user = models.ForeignKey(Users,on_delete=models.CASCADE,default=1)
 
     name = models.CharField(max_length=100)
     amount = models.PositiveIntegerField()

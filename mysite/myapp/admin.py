@@ -6,6 +6,6 @@ class ExpenseAdmin(admin.ModelAdmin):
 
 
 
-     list_display = ["name","amount","category"]
+     list_display = ["name","amount","category","date"]
 
 admin.site.register(Expense,ExpenseAdmin)

@@ -1,11 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render,redirect,reverse
-
+from .context_processors import user_info
 
 from .forms import ExpenseForm
 from .models import Expense
 from django.db.models import Sum
-
+from users.models import Users
 import datetime
 
 # Create your views here.
@@ -13,20 +13,28 @@ import datetime
 
 
 def index(request):
-
+    user_id = request.session.get("user_id", 1)
 
     if request.method == "POST":
         expense_form = ExpenseForm(request.POST)
 
         if expense_form.is_valid():
 
+            user_obj = Users.objects.filter(id=user_id).first()
 
-            expense_form.save()
+            expense = expense_form.save(commit=False)
+
+            expense.user = user_obj
+
+
+
+            expense.save()
 
 
 
 
-    expenses = Expense.objects.all().order_by("-pk")
+
+    expenses = Expense.objects.filter(user_id=user_id).order_by("-pk")
     total_expenses = expenses.aggregate(Sum("amount"))
 
     #logic to calculate 365 days
@@ -34,7 +42,7 @@ def index(request):
 
         last_year = datetime.date.today() - datetime.timedelta(days=365)
 
-        year_data = Expense.objects.filter(date__gte=last_year)
+        year_data = Expense.objects.filter(user_id=user_id,date__gte=last_year)
         yearly_sum = year_data.aggregate(Sum("amount"))
 
         return yearly_sum
@@ -47,7 +55,7 @@ def index(request):
 
 
         last_month = datetime.date.today() - datetime.timedelta(days=30)
-        month_data = Expense.objects.filter(date__gte=last_month)
+        month_data = Expense.objects.filter(user_id=user_id,date__gte=last_month)
 
         monthly_sum = month_data.aggregate(Sum("amount"))
 
@@ -60,7 +68,7 @@ def index(request):
 
     def calculate_7():
         last_week = datetime.date.today() - datetime.timedelta(days=7)
-        week_data = Expense.objects.filter(date__gte=last_week)
+        week_data = Expense.objects.filter(user_id=user_id,date__gte=last_week)
 
         week_sum = week_data.aggregate(Sum("amount"))
 
@@ -72,7 +80,7 @@ def index(request):
     def today():
         today =  datetime.date.today()
 
-        today_data = Expense.objects.filter(date__gte=today)
+        today_data = Expense.objects.filter(user_id=user_id,date__gte=today)
         today_sum = today_data.aggregate(Sum("amount"))
 
         return today_sum
@@ -80,9 +88,9 @@ def index(request):
     today_sum = today()
 
     last_month = datetime.date.today() - datetime.timedelta(days=30)
-    daily_sums = Expense.objects.filter(date__gte=last_month).values("date").order_by("-date").annotate(sum=Sum("amount"))
+    daily_sums = Expense.objects.filter(user_id=user_id,date__gte=last_month).values("date").order_by("-date").annotate(sum=Sum("amount"))
 
-    categorical_sums = Expense.objects.filter().values("category").order_by("category").annotate(sum=Sum("amount"))
+    categorical_sums = Expense.objects.filter(user_id=user_id).values("category").order_by("category").annotate(sum=Sum("amount"))
 
     expense_form = ExpenseForm()
 

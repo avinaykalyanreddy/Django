@@ -13,6 +13,9 @@ from uuid import uuid4
 from django.core.mail import EmailMessage
 
 
+def index(request):
+
+    pass
 
 
 def sign_up(reqeust):

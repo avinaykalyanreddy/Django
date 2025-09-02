@@ -7,7 +7,7 @@ class ExpenseForm(ModelForm):
 
         model = Expense
 
-        fields = ["name","amount","category",]
+        fields = ["name","amount","category"]
 
 
     def clean(self):
