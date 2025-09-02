@@ -10,7 +10,16 @@ import datetime
 
 # Create your views here.
 
+def home(request):
 
+    if not request.session.get("user_id"):
+
+        request.session["user_id"] = 1
+
+
+
+
+    return redirect("myapp:index")
 
 def index(request):
     user_id = request.session.get("user_id", 1)
@@ -101,7 +110,12 @@ def index(request):
 
 def edit(request,id):
 
-    expense = Expense.objects.get(id=id)
+    user_id = request.session.get("user_id")
+    expense = Expense.objects.filter(user_id=user_id,id=id).first()
+
+    if not expense:
+
+        return HttpResponse(f"violating the site rule, go back to <a href= { reverse('myapp:index') } >Home</a>")
 
 
 
@@ -124,14 +138,16 @@ def edit(request,id):
     return render(request,"myapp/edit.html",{"expense_form":expense_form})
 
 def delete(request,id):
+    user_id = request.session.get("user_id")
+    expense = Expense.objects.filter(user_id=user_id, id=id).first()
 
-    if request.method == "POST" and "delete" in request.POST:
 
-        expense = Expense.objects.get(id=id)
+    if expense and  request.method == "POST" and "delete" in request.POST:
+
 
         expense.delete()
 
         return redirect('myapp:index')
 
-    return HttpResponse("Something went wrong")
+    return HttpResponse(f"violating the site rule, go back to <a href= { reverse('myapp:index') } >Home</a>")
 

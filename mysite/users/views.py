@@ -71,6 +71,7 @@ def login(request):
         if user :
 
             if check_password(password,user.password) :
+                request.session["user_id"] = user.id
 
                 success(request,"Login successful")
                 return HttpResponse( f"  <h1>Welcome {user.name}</h1>")
